@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-@Transactional
+//@Transactional
 public class EmployeeRepository {
 
     // connect to DB
@@ -22,13 +22,13 @@ public class EmployeeRepository {
     @PersistenceContext
     EntityManager entityManager;
 
-    @Autowired
-    DepartmentRepository departmentRepository;
-
     public Employee findById(int employeeId) {
         Employee employee = entityManager.find(Employee.class, employeeId);
         return employee;
     }
+
+    @Autowired
+    DepartmentRepository departmentRepository;
 
     public Employee update(Employee employee) {
         Employee updatedEmployee = entityManager.merge(employee);
@@ -41,11 +41,13 @@ public class EmployeeRepository {
     }
 
     public Employee save(Employee employee) {
-        if (employee.getEmployeeId() == 0) {
+        entityManager.getTransaction().begin();
+//        if (employee.getEmployeeId() == 0) {
             entityManager.persist(employee);
-        } else {
-            entityManager.merge(employee);
-        }
+//            entityManager.getTransaction().commit();
+//        } else {
+//            entityManager.merge(employee);
+//        }
         return employee;
     }
 
